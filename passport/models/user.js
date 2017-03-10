@@ -25,10 +25,9 @@ module.exports = function(mongoose){
     };
 
     // 创建新用户
-    User.prototype.save = function(user,callback){
+    User.prototype.save = function(callback){
 
-        var md5 = crypto.createHash('md5'),
-            defaultRole = 'vacationer';
+        var defaultRole = 'vacationer';
 
         var user = {
             phone: this.phone,
@@ -51,17 +50,18 @@ module.exports = function(mongoose){
     //获取用户信息
     User.get = function(type, content, callback){
         var query = {};
-        if(type=='id'){
+        if(type == 'id'){
             query._id = new ObjectID(content);
         }else if(type == 'phone'){
-            query.phone = centent;
+            query.phone = content;
         }else if(type == 'email'){
             query.email = content;
         }else if(type == 'name'){
             query.name = content;
         }else{
-            callback('只支持通过【id,phone,email,name】来查询');
+            return callback('只支持通过【id,phone,email,name】来查询');
         }
+
         userModel.findOne(query,function(err, user){
             if(err){
                 return callback(err);
@@ -90,5 +90,7 @@ module.exports = function(mongoose){
             }
         });
     }
+
+    return User;
 
 }

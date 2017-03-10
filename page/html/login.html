@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <h1>login</h1>
+    <form id='loginFrom'>
+        <div>用户名：<input type="text" name="username"></div><br />
+        <div>密码：<input type="text" name="password"></div><br />
+        <div><button class="submitBtn">注册</button></div>
+    </form>
+    <script>
+        $(function(){
+            $('#loginFrom').on('submit',function(e){
+                e.preventDefault();
+                var data = nt.func.jqSAtojson($(this).serializeArray());
+                console.log(data);
+                // nt.postLoadData('/passport/login',data,function(json){
+                //     console.log(json);
+                //     if(json.code == '0000'){
+                //         alert(json.msg);
+                //     }else{
+                //         alert(json.msg);
+                //     }
+                // },function(){});
+            })
+        });
+    </script>
+</body>
+</html>
