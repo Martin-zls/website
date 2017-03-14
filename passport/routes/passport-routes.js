@@ -3,7 +3,7 @@ var crypto = require('crypto'),
     setting = require('../../setting/db-set.js'),
     async = require('async');
 
-console.log('mongodb://'+setting.host+':'+setting.port+'/'+setting.db);
+// console.log('mongodb://'+setting.host+':'+setting.port+'/'+setting.db);
 mongoose.connect('mongodb://'+setting.host+':'+setting.port+'/'+setting.db);
 var User = require('../models/user.js')(mongoose);
 
@@ -45,11 +45,11 @@ module.exports = [
             //生成密码的 md5 值
             var md5 = crypto.createHash('md5'),
                 password = md5.update(req.body.password).digest('hex');
+
             var newUser = new User({
                 name: username,
                 password: password
             });
-            console.log()
 
             //检查用户名
             User.get('name', newUser.name, function(err, user){
@@ -59,7 +59,7 @@ module.exports = [
                         msg: err
                     })
                 }
-                console.log(user);
+
                 if(user){
                     return res.json({
                         code: '0001',
@@ -73,7 +73,7 @@ module.exports = [
                             msg: err
                         })
                     }
-                    console.log(user,123);
+
                     return res.json({
                         code: '0000',
                         msg: '注册成功'
@@ -98,25 +98,33 @@ module.exports = [
         route: '/passport/login',
         func: function(req,res){
             var username = req.body.username,
+                md5 = crypto.createHash('md5'),
                 password = md5.update(req.body.password).digest('hex');
+
 
             async.waterfall([
                 function(cb){
-                    User.get('phone',username,function(err, user){
-                        if(err){
-                            return res.json(err);
-                        }else{
-                            if(user && user.password === password){
-                                res.json({
-                                    code: '0000',
-                                    msg: '登录成功'
-                                });
+                    if(!isNaN(username)){
+                        User.get('phone',username,function(err, user){
+                            if(err){
+                                return res.json(err);
                             }else{
-                                cb();
+                                if(user && user.password === password){
+                                    res.json({
+                                        code: '0000',
+                                        msg: '登录成功'
+                                    });
+                                    req.session.user = user;
+                                }else{
+                                    cb();
+                                }
+                                
                             }
-                            
-                        }
-                    });
+                        });
+                    }else{
+                        cb();
+                    }
+                    
                 },
                 function(cb){
                     User.get('email',username,function(err, user){
@@ -128,6 +136,7 @@ module.exports = [
                                     code: '0000',
                                     msg: '登录成功'
                                 })
+                                req.session.user = user;
                             }else{
                                 cb();
                             }
@@ -135,7 +144,7 @@ module.exports = [
                     })
                 },
                 function(cb){
-                    user.get('name',username,function(err, user){
+                    User.get('name',username,function(err, user){
                         if(err){
                             return res.json(err);
                         }else{
@@ -144,6 +153,8 @@ module.exports = [
                                     code: '0000',
                                     msg: '登录成功'
                                 });
+                                console.log(req.session);
+                                req.session.user = user;
                             }else{
                                 cb();
                             }
@@ -160,12 +171,11 @@ module.exports = [
         }
     },
     {
-        type: 'get',
-        route: '/passport/getUserList',
+        type: 'post',
+        route: '/passport/islogin',
         func: function(req,res){
-            var limit = req.body.limit || 10;
-
-
+            console.log(req.session.user);
+            res.json(123)
         }
     }
 ];

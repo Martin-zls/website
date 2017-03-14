@@ -31,9 +31,10 @@ module.exports = function(mongoose){
 
         var user = {
             name: this.name,
-            password: this.passowrd,
+            password: this.password,
             role: defaultRole
         };
+
 
         var newUser = new userModel(user);
 

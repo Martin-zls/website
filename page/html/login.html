@@ -15,18 +15,24 @@
     </form>
     <script>
         $(function(){
+            nt.postLoadData('/passport/islogin',{},function(json){
+                console.log(json);
+            })
+
             $('#loginFrom').on('submit',function(e){
                 e.preventDefault();
                 var data = nt.func.jqSAtojson($(this).serializeArray());
-                console.log(data);
-                // nt.postLoadData('/passport/login',data,function(json){
-                //     console.log(json);
-                //     if(json.code == '0000'){
-                //         alert(json.msg);
-                //     }else{
-                //         alert(json.msg);
-                //     }
-                // },function(){});
+
+                nt.postLoadData('/passport/login',data,function(json){
+                    if(json.code == '0000'){
+                        alert(json.msg);
+                        nt.postLoadData('/passport/islogin',{},function(json){
+                            console.log(json);
+                        })
+                    }else{
+                        alert(json.msg);
+                    }
+                },function(){});
             })
         });
     </script>
