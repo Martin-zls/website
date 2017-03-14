@@ -101,6 +101,7 @@ module.exports = [
                 md5 = crypto.createHash('md5'),
                 password = md5.update(req.body.password).digest('hex');
 
+            console.log(req.session.views,2222);
 
             async.waterfall([
                 function(cb){
@@ -153,7 +154,6 @@ module.exports = [
                                     code: '0000',
                                     msg: '登录成功'
                                 });
-                                console.log(req.session);
                                 req.session.user = user;
                             }else{
                                 cb();
@@ -174,8 +174,14 @@ module.exports = [
         type: 'post',
         route: '/passport/islogin',
         func: function(req,res){
-            console.log(req.session.user);
-            res.json(123)
+            var views = req.session.views
+            if (views == undefined) {
+                req.session.views = 0;
+            }else{
+                req.session.views++;
+            }
+            console.log(req.session.views);
+            res.json(req.session.views)
         }
     }
 ];
