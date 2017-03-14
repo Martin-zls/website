@@ -3,5 +3,5 @@ module.exports = {
    cookieSecret: 'myblog',
    db: 'myweb',
    host: '16628p60i0.imwork.net',
-   port: 33718
+   port: 33984
 };
