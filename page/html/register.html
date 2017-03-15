@@ -12,7 +12,7 @@
         <div>用户名：<input type="text" name="username"></div><br />
         <div>密码：<input type="text" name="password"></div><br />
         <div>确认密码：<input type="text" name="passwordRepeat"></div><br />
-        <div><button class="submitBtn">注册</button></div>
+        <div><button class="submitBtn">注册</button><a href="/html/login.html">去登录</a></div>
     </form>
     <script>
         $(function(){
@@ -20,9 +20,9 @@
                 e.preventDefault();
                 var data = nt.func.jqSAtojson($(this).serializeArray());
                 nt.postLoadData('/passport/reg',data,function(json){
-                    console.log(json);
                     if(json.code == '0000'){
                         alert(json.msg);
+                        window.location.href="/html/login.html"
                     }else{
                         alert(json.msg);
                     }

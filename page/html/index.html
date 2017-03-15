@@ -5,29 +5,37 @@
     <title>Document</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/common.js"></script>
+    <style>
+        #logoutBtn{
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>reg</h1>
-    <form id='regFrom'>
-        <div>用户名：<input type="text" name="username"></div>
-        <div>密码：<input type="text" name="password"></div>
-        <div>确认密码：<input type="text" name="passwordRepeat"></div>
-        <div><button class="submitBtn">注册</button></div>
-    </form>
+    <h1></h1>
+    <a href="javascript:void(0);" id="personBtn">个人信息</a><br/>
+    <a href="javascript:void(0);" id="logoutBtn">退出登录</a>
     <script>
         $(function(){
-            $('#regFrom').on('submit',function(e){
-                e.preventDefault();
-                var data = nt.func.jqSAtojson($(this).serializeArray());
-                nt.postLoadData('/passport/reg',data,function(json){
-                    console.log(json);
+            nt.postLoadData('/passport/islogin',{},function(json){
+                if(json.code == '0000'){
+                    $('h1').html('欢迎您，'+json.result.name);
+                    $('#logoutBtn').show();
+                    $('#personBtn').attr('href','/html/info.html?id='+json.result.id);
+                }
+                if(json.code == '1006'){
+                    window.location.href='/html/login.html';
+                }
+            });
+
+            $('#logoutBtn').on('click',function(){
+                nt.postLoadData('/passport/logout',{},function(json){
                     if(json.code == '0000'){
                         alert(json.msg);
-                    }else{
-                        alert(json.msg);
+                        window.location.href='/html/login.html';
                     }
-                },function(){});
-            })
+                });
+            });
         });
     </script>
 </body>

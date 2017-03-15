@@ -12,7 +12,7 @@ module.exports = function(mongoose){
         head: String,
         role: String,
         phone: Number,
-        Sex: Number
+        sex: Number
     },{
         collection: 'users'
     });
@@ -22,7 +22,7 @@ module.exports = function(mongoose){
     function User(user){
         this.name = user.name;
         this.password = user.password;
-    };
+    }
 
     // 创建新用户
     User.prototype.save = function(callback){
@@ -45,10 +45,10 @@ module.exports = function(mongoose){
             callback(null,user);
         })
 
-    }
+    };
 
     //获取用户信息
-    User.get = function(type, content, callback){
+    User.get = function(type, content, callback, opt){
         var query = {};
         if(type == 'id'){
             query._id = new ObjectID(content);
@@ -62,13 +62,13 @@ module.exports = function(mongoose){
             return callback('只支持通过【id,phone,email,name】来查询');
         }
 
-        userModel.findOne(query,function(err, user){
+        userModel.findOne(query,opt,function(err, user){
             if(err){
                 return callback(err);
             }
             callback(null, user);
         });
-    }
+    };
 
     //修改用户信息
     User.upload = function(_id, newuser, callback){
@@ -82,7 +82,7 @@ module.exports = function(mongoose){
                         user[i] = newuser[i]
                     }
                 }
-                postModel.update({
+                userModel.update({
                     "_id": new ObjectID(_id)
                 },{$set: user}).exec(function(err){
                     callback(err,null);
@@ -113,4 +113,4 @@ module.exports = function(mongoose){
 
     return User;
 
-}
+};

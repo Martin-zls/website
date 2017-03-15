@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <h1>修改个人信息</h1>
+    <form id='userFrom'>
+        <input type="hidden" name="_id">
+        <div>用户名：<input type="text" name="name"></div><br />
+        <div>邮箱：<input type="text" name="email"></div><br />
+        <div>手机号码：<input type="text" name="phone"></div><br />
+        <div>性别：
+            <label for="man"><input id="man" type="radio" name="sex" value="1" checked>男</label>
+            <label for="woman"><input id="woman" type="radio" name="sex" value="2">女</label>
+        </div><br />
+        <div><button class="submitBtn">提交</button><a href="/html/index.html">返回</a></div>
+    </form>
+    <script>
+        $(function(){
+            var id = nt.func.getQueryString('id');
+            nt.postLoadData('/passport/getUserInfo',{id: id},function(json){
+                if(json.code === '1006'){
+                    window.location.href="/html/login.html";
+                }else{
+                    var result = json.result;
+                    for(var i in result){
+                        $('#userFrom [name="'+i+'"]').val(result[i]);
+                    }
+                }
+            });
+
+            $('#userFrom').submit(function(e){
+                e.preventDefault();
+                var data = nt.func.jqSAtojson($(this).serializeArray());
+
+                nt.postLoadData('/passport/uploadUserInfo',data,function(json){
+                    if(json.code==='0000'){
+                        window.location.reload();
+                    }else{
+                        alert(json.msg);
+                    }
+                })
+            })
+
+        });
+    </script>
+</body>
+</html>

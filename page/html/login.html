@@ -11,7 +11,7 @@
     <form id='loginFrom'>
         <div>用户名：<input type="text" name="username"></div><br />
         <div>密码：<input type="text" name="password"></div><br />
-        <div><button class="submitBtn">注册</button></div>
+        <div><button class="submitBtn">登录</button><a href="/html/register.html">去注册</a></div>
     </form>
     <script>
         $(function(){
@@ -26,9 +26,7 @@
                 nt.postLoadData('/passport/login',data,function(json){
                     if(json.code == '0000'){
                         alert(json.msg);
-                        nt.postLoadData('/passport/islogin',{},function(json){
-                            console.log(json);
-                        })
+                        window.location.href = '/html/index.html';
                     }else{
                         alert(json.msg);
                     }
