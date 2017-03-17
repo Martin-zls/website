@@ -61,12 +61,8 @@ module.exports = function(mongoose){
         }else{
             return callback('只支持通过【id,phone,email,name】来查询');
         }
-
         userModel.findOne(query,opt,function(err, user){
-            if(err){
-                return callback(err);
-            }
-            callback(null, user);
+            callback(err, user);
         });
     };
 

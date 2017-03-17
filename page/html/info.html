@@ -5,11 +5,35 @@
     <title>Document</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/module/mod-alert/jquery-alert.js"></script>
+    <script src="/js/module/mod-upload/upload.js"></script>
+    <script src="../js/module/mod-upload/upload.js"></script>
+    <style>
+        .header{
+            display: block;
+            width: 150px;
+            height: 150px;
+            padding: 5px;
+            border: 1px solid #cdcdcd;
+            box-shadow: inset 0 0 2px #ddd;
+            margin-bottom: 20px;
+        }
+        .header .header-img{
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0 none;
+        }
+    </style>
 </head>
 <body>
     <h1>修改个人信息</h1>
     <form id='userFrom'>
         <input type="hidden" name="_id">
+        <input type="hidden" name="head">
+        <div class="header">
+            <img class="header-img" src="">
+        </div>
         <div>用户名：<input type="text" name="name"></div><br />
         <div>邮箱：<input type="text" name="email"></div><br />
         <div>手机号码：<input type="text" name="phone"></div><br />
@@ -24,12 +48,16 @@
             var id = nt.func.getQueryString('id');
             nt.postLoadData('/passport/getUserInfo',{id: id},function(json){
                 if(json.code === '1006'){
-                    window.location.href="/html/login.html";
+                    $.fn.nt_tip('您还未登录','danger');
+                    setTimeout(function(){
+                        window.location.href="/html/login.html";
+                    },2000);
                 }else{
                     var result = json.result;
                     for(var i in result){
                         $('#userFrom [name="'+i+'"]').val(result[i]);
                     }
+                    $('.header-img').attr('src',result.head);
                 }
             });
 
@@ -39,12 +67,53 @@
 
                 nt.postLoadData('/passport/uploadUserInfo',data,function(json){
                     if(json.code==='0000'){
-                        window.location.reload();
+                        $.fn.nt_tip('更新成功','success');
+                        setTimeout(function(){
+                            window.location.reload();
+                        },2000);
                     }else{
-                        alert(json.msg);
+                        $.fn.nt_tip(json.msg,'danger');
                     }
                 })
-            })
+            });
+
+            $('.header-img').on('click',function(){
+                $.fn.nt_alert({
+                    title: '文件上传',
+                    htmlstr: '<div id="UploadBox"></div>',
+                    ready: function ($alert) {
+                        $('#UploadBox').nt_FileUpload({
+                            uploadNum: 'single',
+                            uploader: '/file/fileUpload',
+                            filename: 'avatar',
+                            confirm: function(picurl){
+                                $alert.remove();
+                                $('#nt-crm-zhezhao').hide();
+
+                                var result = JSON.parse(picurl[0].result);
+                                if(result.code === '0000'){
+                                    $('[name="head"]').val('/fileUpload/'+result.filename);
+                                    $('.header-img').attr('src','/fileUpload/'+result.filename);
+                                    nt.postLoadData('/passport/upUserHead',{
+                                        headurl: '/fileUpload/'+result.filename
+                                    },function(json){
+                                        if(json.code=='0000'){
+                                            $.fn.nt_tip('更新头像成功','success');
+                                        }
+                                    })
+                                }else{
+                                    $.fn.nt_tip('上传失败，请稍后重试','danger');
+                                }
+
+                            },
+                            cancel: function(){
+                                $alert.remove();
+                                $('#nt-crm-zhezhao').hide();
+                            }
+                        });
+                    }
+                })
+            });
 
         });
     </script>

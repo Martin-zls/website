@@ -5,6 +5,7 @@
     <title>Document</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/module/mod-alert/jquery-alert.js"></script>
 </head>
 <body>
     <h1>reg</h1>
@@ -21,10 +22,10 @@
                 var data = nt.func.jqSAtojson($(this).serializeArray());
                 nt.postLoadData('/passport/reg',data,function(json){
                     if(json.code == '0000'){
-                        alert(json.msg);
+                        $.fn.nt_tip('登录成功','success');
                         window.location.href="/html/login.html"
                     }else{
-                        alert(json.msg);
+                        $.fn.nt_tip(json.msg,'danger');
                     }
                 },function(){});
             })

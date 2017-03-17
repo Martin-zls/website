@@ -1,0 +1,10 @@
+.inputbox{
+    position: relative;
+}
+#abc{
+    width: 800px;
+    margin:60px auto;
+}
+.nt-ntFormVER-error .errmsgPrompts{
+    color: #ce4844;
+}

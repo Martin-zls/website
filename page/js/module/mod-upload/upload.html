@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../mod-alert/alert.css">
+    <link rel="stylesheet" href="./upload.css">
+    <script src="../../jquery-1.9.1.min.js"></script>
+    <script src="./upload.js"></script>
+</head>
+<body>
+    <div id="filebox1"></div>
+    <script>
+        $(function(){
+            $('#filebox1').nt_FileUpload({
+                uploader: '/crm/dealer/importBankDetail',
+                formdata: {orderId: '300001160'},
+                filename: 'excelName',
+                confirm: function(picurl){
+                    console.log(picurl);
+                },
+                cancel: function(){
+
+                }
+            });
+        });
+    </script>
+</body>
+</html>

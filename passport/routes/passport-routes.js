@@ -7,7 +7,7 @@ var crypto = require('crypto'),
 mongoose.connect('mongodb://'+setting.host+':'+setting.port+'/'+setting.db);
 var User = require('../models/user.js')(mongoose);
 var path = '/passport';
-var code = require('../../setting/resCode.js')
+var code = require('../../setting/resCode.js');
 
 module.exports = [
     /*
@@ -221,7 +221,7 @@ module.exports = [
                     code: '0000',
                     result: user
                 });
-            },['_id','name','role','email','phone']);
+            },['_id','name','role','email','phone','head']);
         }
     },
     /*
@@ -257,17 +257,16 @@ module.exports = [
             user.sex = req.body.sex;
 
             if(!id){
-                printCode(res,'0001');
+                return printCode(res,'0001');
             }
             if(!user.name){
-                printCode(res,'1000');
+                return printCode(res,'1000');
             }
 
             async.waterfall([function(cb){
                 User.get('id',id,function(err,visiter){
                     if(err) return printCode('0002');
                     cb(null,visiter);
-                    console.log(visiter);
                 });
             },function(visiter,cb){
                 if(user.name != visiter.name){
@@ -321,6 +320,32 @@ module.exports = [
                     printCode(res,'0000');
                 }
             });
+        }
+    },
+    {
+        type: 'post',
+        route: path + '/upUserHead',
+        func: checkLogin
+    },
+    {
+        type: 'post',
+        route: path + '/upUserHead',
+        func: function(req,res){
+            var headurl = req.body.headurl,
+                id = req.session.user.id,
+                user={};
+            if(!headurl){
+                return printCode(res,'1009');
+            }
+            user.head = headurl;
+            User.upload(id,user,function(err){
+                if(err){
+                    printCode(res,'0002');
+                }else{
+                    printCode(res,'0000');
+                }
+            })
+
         }
     }
 ];

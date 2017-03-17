@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../common/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="formVerification.css">
+    <script src="../../jquery-1.9.1.js"></script>
+    <script src="formVerification.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#abc").nt_FormVER({
+                reg:{
+                    "mobile": [/^1[3|4|5|7|8]\d{9}$/,"请填写正确的手机号码！"],
+                    "personId": [/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,"请填写正确的身份证号码！"]
+                },
+                submit: function(formdata){
+                    console.log("回调，可做一些事情！");
+                    console.log(formdata);
+                    return false;
+                },
+                ready: function(){
+                    console.log("表单验证加载完成了，你可以做点什么！")
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <form id="abc" class="form-horizontal">
+        <div class="form-group row">
+            <label for="uername" class="col-sm-2 control-label">用户名：</label>
+            <div class="inputbox col-sm-10">
+                <input class="form-control" type="text" name="uername" data-rule="chinese require">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="mobile" class="col-sm-2 control-label">手机号码：</label>
+            <div class="inputbox col-sm-10">
+                <input class="form-control" type="text" name="mobile" data-rule="mobile require">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="address" class="col-sm-2 control-label">地址：</label>
+            <div class="inputbox col-sm-10">
+                <input class="form-control" type="text" name="address" data-rule="require">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="personId" class="col-sm-2 control-label">身份证：</label>
+            <div class="inputbox col-sm-10">
+                <input class="form-control" type="text" name="personId" data-rule="require">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary nt-form-submit">提交</button>
+            </div>
+        </div>
+        
+    </form>
+</body>
+</html>

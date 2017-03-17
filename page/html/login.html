@@ -5,19 +5,22 @@
     <title>Document</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/module/mod-alert/jquery-alert.js"></script>
 </head>
 <body>
     <h1>login</h1>
     <form id='loginFrom'>
         <div>用户名：<input type="text" name="username"></div><br />
-        <div>密码：<input type="text" name="password"></div><br />
+        <div>密码：<input type="password" name="password"></div><br />
         <div><button class="submitBtn">登录</button><a href="/html/register.html">去注册</a></div>
     </form>
     <script>
         $(function(){
             nt.postLoadData('/passport/islogin',{},function(json){
-                console.log(json);
-            })
+                if(json.code === '0000'){
+                    window.location.href = '/html/index.html';
+                }
+            });
 
             $('#loginFrom').on('submit',function(e){
                 e.preventDefault();
@@ -25,10 +28,12 @@
 
                 nt.postLoadData('/passport/login',data,function(json){
                     if(json.code == '0000'){
-                        alert(json.msg);
-                        window.location.href = '/html/index.html';
+                        $.fn.nt_tip(json.msg,'success');
+                        setTimeout(function(){
+                            window.location.href = '/html/index.html';
+                        },3000);
                     }else{
-                        alert(json.msg);
+                        $.fn.nt_tip(json.msg,'danger');
                     }
                 },function(){});
             })

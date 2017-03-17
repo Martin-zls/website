@@ -5,6 +5,7 @@
     <title>Document</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/common.js"></script>
+    <script src="/js/module/mod-alert/jquery-alert.js"></script>
     <style>
         #logoutBtn{
             display: none;
@@ -31,8 +32,12 @@
             $('#logoutBtn').on('click',function(){
                 nt.postLoadData('/passport/logout',{},function(json){
                     if(json.code == '0000'){
-                        alert(json.msg);
-                        window.location.href='/html/login.html';
+                        $.fn.nt_tip(json.msg,'success');
+                        setTimeout(function(){
+                            window.location.href='/html/login.html';
+                        },3000);
+                    }else{
+                        $.fn.nt_tip(json.msg,'danger');
                     }
                 });
             });
